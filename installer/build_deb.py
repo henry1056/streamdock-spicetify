@@ -52,34 +52,43 @@ Section: sound
 Priority: optional
 Architecture: all
 Maintainer: henry1056 <henry1056@users.noreply.github.com>
-Depends: python3 (>= 3.10), python3-pip, python3-pil, python3-websockets, python3-psutil
-Recommends: spotify-client, playerctl, libhidapi-hidraw0
+Depends: nodejs (>= 16)
+Recommends: vsdcraft (>= 1.0.0), spotify-client
 Homepage: https://github.com/henry1056/streamdock-spicetify
-Description: Stream Dock N3 Spotify Controller & Spicetify Integration
+Description: Spicetify plugin & bridge for VSDCraft Linux (Stream Dock N3)
  Control Spotify desktop directly from your VSDinside Stream Dock N3 macro pad.
- Features instant local play/pause, rotary knob volume control, live LCD album art,
- playlist caching, background daemon, and full Linux support.
+ Fully compatible with VSDCraft Linux (https://github.com/henry1056/vsdcraft-linux).
+ Provides the StreamDock plugin bundle (com.vsdinside.spicetify.sdPlugin),
+ the Spicetify local extension (streamdock.js), and automated setup tools.
 """
 
     postinst_text = """#!/bin/sh
 set -e
 
-# Reload udev rules for Stream Dock USB HID access
-if [ -x /usr/bin/udevadm ]; then
-    udevadm control --reload-rules || true
-    udevadm trigger || true
-fi
+# Deploy plugin bundle for current and future users
+mkdir -p /etc/skel/.config/vsdcraft/plugins
+cp -rf /usr/share/vsdcraft/plugins/com.vsdinside.spicetify.sdPlugin /etc/skel/.config/vsdcraft/plugins/ 2>/dev/null || true
 
-# Attempt to install customtkinter / hidapi if missing
-python3 -m pip install --break-system-packages customtkinter hidapi 2>/dev/null || true
+# For any logged in non-root user with home directory, deploy plugin
+for udir in /home/*; do
+    if [ -d "$udir" ]; then
+        target_plugin="$udir/.config/vsdcraft/plugins/com.vsdinside.spicetify.sdPlugin"
+        mkdir -p "$udir/.config/vsdcraft/plugins"
+        rm -rf "$target_plugin"
+        cp -rf /usr/share/vsdcraft/plugins/com.vsdinside.spicetify.sdPlugin "$target_plugin"
+        chown -R "$(basename "$udir")":"$(basename "$udir")" "$udir/.config/vsdcraft" 2>/dev/null || true
+    fi
+done
 
-# Check if spicetify is in PATH and offer auto-setup
-if command -v spicetify >/dev/null 2>&1; then
-    echo "=========================================================="
-    echo "  Spicetify detected! To complete Spicetify integration:  "
-    echo "  Run: streamdock-spicetify-setup                         "
-    echo "=========================================================="
-fi
+echo "=========================================================="
+echo "  ⚡ Stream Dock Spicetify Integration Installed!"
+echo "=========================================================="
+echo "  • Compatible with VSDCraft Linux v1.0.0"
+echo "  • Plugin deployed to: ~/.config/vsdcraft/plugins/"
+echo ""
+echo "  To register the Spicetify extension in Spotify, run:"
+echo "      streamdock-spicetify-setup"
+echo "=========================================================="
 
 exit 0
 """
@@ -138,10 +147,6 @@ exit 0
                             tar.addfile(ti, fp)
 
             # Filesystem folders:
-            # /usr/share/vsdcraft/...
-            vsdcraft_src = os.path.join(ROOT_DIR, "vsdcraft-linux", "vsdcraft")
-            add_dir_to_tar(vsdcraft_src, "./usr/share/vsdcraft/vsdcraft")
-
             # Plugin bundle: /usr/share/vsdcraft/plugins/com.vsdinside.spicetify.sdPlugin
             plugin_src = os.path.join(ROOT_DIR, "streamdock-plugin", "com.vsdinside.spicetify.sdPlugin")
             add_dir_to_tar(plugin_src, "./usr/share/vsdcraft/plugins/com.vsdinside.spicetify.sdPlugin")
@@ -155,18 +160,6 @@ exit 0
             with open(ext_file, "rb") as fp:
                 tar.addfile(ti, fp)
 
-            # /usr/bin/vsdcraft launcher
-            vsdcraft_bin = """#!/bin/sh
-export PYTHONPATH="/usr/share/vsdcraft:${PYTHONPATH}"
-exec /usr/bin/python3 -m vsdcraft "$@"
-"""
-            ti = tarfile.TarInfo("./usr/bin/vsdcraft")
-            b_content = vsdcraft_bin.encode("utf-8")
-            ti.size = len(b_content)
-            ti.mode = 0o755
-            ti.mtime = int(time.time())
-            tar.addfile(ti, io.BytesIO(b_content))
-
             # /usr/bin/streamdock-spicetify-setup
             setup_bin = """#!/bin/sh
 set -e
@@ -176,22 +169,35 @@ echo "=========================================================="
 
 EXT_SRC="/usr/share/vsdcraft/spicetify-extension/streamdock.js"
 TARGET_DIR="${HOME}/.config/spicetify/Extensions"
+FLATPAK_DIR="${HOME}/.var/app/com.spotify.Client/config/spicetify/Extensions"
+
 mkdir -p "${TARGET_DIR}"
 cp -f "${EXT_SRC}" "${TARGET_DIR}/streamdock.js"
-echo "Copied streamdock.js to ${TARGET_DIR}/streamdock.js"
+echo "✅ Copied streamdock.js to ${TARGET_DIR}/streamdock.js"
+
+if [ -d "${HOME}/.var/app/com.spotify.Client" ]; then
+    mkdir -p "${FLATPAK_DIR}"
+    cp -f "${EXT_SRC}" "${FLATPAK_DIR}/streamdock.js"
+    echo "✅ Copied streamdock.js to Flatpak Spotify extensions"
+fi
 
 PLUGIN_SRC="/usr/share/vsdcraft/plugins/com.vsdinside.spicetify.sdPlugin"
 USER_PLUGIN_DIR="${HOME}/.config/vsdcraft/plugins"
 mkdir -p "${USER_PLUGIN_DIR}"
+rm -rf "${USER_PLUGIN_DIR}/com.vsdinside.spicetify.sdPlugin"
 cp -rf "${PLUGIN_SRC}" "${USER_PLUGIN_DIR}/"
-echo "Deployed StreamDock plugin to ${USER_PLUGIN_DIR}/"
+echo "✅ Deployed StreamDock plugin to ${USER_PLUGIN_DIR}/"
 
 if command -v spicetify >/dev/null 2>&1; then
+    echo "⚙️ Configuring Spicetify..."
     spicetify config extensions streamdock.js || true
+    echo "🚀 Applying Spicetify patch..."
     spicetify apply || true
-    echo "Spicetify extension registered and applied!"
+    echo "✅ Spicetify extension registered and applied!"
 fi
-echo "Setup complete! Launch VSDCraft by running: vsdcraft"
+
+echo ""
+echo "🎉 Setup complete! Launch VSDCraft by running: vsdcraft"
 """
             ti = tarfile.TarInfo("./usr/bin/streamdock-spicetify-setup")
             s_content = setup_bin.encode("utf-8")
@@ -200,47 +206,33 @@ echo "Setup complete! Launch VSDCraft by running: vsdcraft"
             ti.mtime = int(time.time())
             tar.addfile(ti, io.BytesIO(s_content))
 
-            # /lib/udev/rules.d/99-streamdock.rules
-            udev_file = os.path.join(ROOT_DIR, "vsdcraft-linux", "99-streamdock.rules")
-            ti = tarfile.TarInfo("./lib/udev/rules.d/99-streamdock.rules")
-            ti.size = os.path.getsize(udev_file)
-            ti.mode = 0o644
-            ti.mtime = int(os.path.getmtime(udev_file))
-            with open(udev_file, "rb") as fp:
-                tar.addfile(ti, fp)
-
-            # /usr/share/applications/vsdcraft.desktop
-            desktop_content = """[Desktop Entry]
-Name=VSDCraft Linux
-Comment=Stream Dock N3 Controller
-Exec=/usr/bin/vsdcraft
-Icon=input-gaming
-Terminal=false
-Type=Application
-Categories=Utility;AudioVideo;
+            # /usr/bin/streamdock-spicetify-bridge
+            bridge_bin = """#!/bin/sh
+# Standalone Spicetify Stream Dock Bridge runner
+exec /usr/bin/node /usr/share/vsdcraft/plugins/com.vsdinside.spicetify.sdPlugin/plugin/index.js "$@"
 """
-            ti = tarfile.TarInfo("./usr/share/applications/vsdcraft.desktop")
-            d_bytes = desktop_content.encode("utf-8")
-            ti.size = len(d_bytes)
-            ti.mode = 0o644
+            ti = tarfile.TarInfo("./usr/bin/streamdock-spicetify-bridge")
+            b_content = bridge_bin.encode("utf-8")
+            ti.size = len(b_content)
+            ti.mode = 0o755
             ti.mtime = int(time.time())
-            tar.addfile(ti, io.BytesIO(d_bytes))
+            tar.addfile(ti, io.BytesIO(b_content))
 
-            # /usr/lib/systemd/user/vsdcraft.service
+            # /usr/lib/systemd/user/streamdock-bridge.service
             service_content = """[Unit]
-Description=VSDCraft Stream Dock N3 Background Daemon
-After=graphical-session.target pipewire.service pulseaudio.service
+Description=Stream Dock N3 Spicetify Local Bridge
+After=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/vsdcraft --daemon
+ExecStart=/usr/bin/streamdock-spicetify-bridge
 Restart=always
 RestartSec=3
 
 [Install]
 WantedBy=default.target
 """
-            ti = tarfile.TarInfo("./usr/lib/systemd/user/vsdcraft.service")
+            ti = tarfile.TarInfo("./usr/lib/systemd/user/streamdock-bridge.service")
             srv_bytes = service_content.encode("utf-8")
             ti.size = len(srv_bytes)
             ti.mode = 0o644

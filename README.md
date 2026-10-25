@@ -107,11 +107,35 @@ If you prefer mapping directly via HTTP webhooks without third-party plugin list
 
 ---
 
-## Linux Support & Setup
+## Linux Support & VSDCraft Linux Integration
 
-Because VSDinside does not release an official native Linux version of VSD Craft, this repository includes **VSDCraft Linux**: a native Python 3 + CustomTkinter + HIDAPI controller and background daemon built specifically for the Stream Dock N3 on Linux (Ubuntu, Debian, Fedora, Arch, etc.).
+This repository is built for **[VSDCraft Linux v1.0.0](https://github.com/henry1056/vsdcraft-linux/releases/tag/v1.0.0)**, the native Linux controller for the VSDinside Stream Dock N3, Mirabox N3, and Ajazz AKP03 macro pads.
 
-### Automated One-Click Linux Setup
+### Using with VSDCraft Linux (Recommended)
+
+1. **Install VSDCraft Linux:**
+   Download and install `vsdcraft_1.0.0_all.deb` from [VSDCraft Linux Releases](https://github.com/henry1056/vsdcraft-linux/releases/tag/v1.0.0):
+   ```bash
+   sudo apt install ./vsdcraft_1.0.0_all.deb
+   ```
+
+2. **Install the Spicetify Stream Dock Integration:**
+   Download and install `streamdock-spicetify_1.0.0_all.deb` from [Releases](https://github.com/henry1056/streamdock-spicetify/releases/latest):
+   ```bash
+   sudo dpkg -i streamdock-spicetify_1.0.0_all.deb
+   streamdock-spicetify-setup
+   ```
+   *(Or run `./setup-linux.sh` from source)*
+
+3. **Launch VSDCraft:**
+   ```bash
+   vsdcraft
+   ```
+   The Spotify / Spicetify actions will automatically appear in your VSDCraft Action Palette ready to assign to keys and rotary knobs.
+
+---
+
+### Automated One-Click Linux Setup (From Source)
 
 Run the root setup script:
 ```bash

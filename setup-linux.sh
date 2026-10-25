@@ -54,14 +54,21 @@ cp -r "${PLUGIN_SRC}" "${PLUGIN_DEST_DIR}/com.vsdinside.spicetify.sdPlugin"
 echo "✅ Installed plugin bundle to: ${PLUGIN_DEST_DIR}/com.vsdinside.spicetify.sdPlugin"
 
 # ---------------------------------------------------------
-# Step 3: Install VSDCraft Controller & Udev Rules
+# Step 3: Check VSDCraft Linux Installation
 # ---------------------------------------------------------
 echo ""
-echo "Step 3: Installing VSDCraft Linux Controller & USB Permissions..."
-if [ -f "${VSDCRAFT_DIR}/install.sh" ]; then
+echo "Step 3: Checking VSDCraft Linux Installation..."
+if command -v vsdcraft &> /dev/null; then
+    echo "✅ VSDCraft Linux is already installed at: $(command -v vsdcraft)"
+    echo "   (Compatible with https://github.com/henry1056/vsdcraft-linux/releases/tag/v1.0.0)"
+elif [ -f "${VSDCRAFT_DIR}/install.sh" ]; then
+    echo "📦 Setting up local VSDCraft Linux controller..."
     bash "${VSDCRAFT_DIR}/install.sh"
 else
-    echo "⚠️  vsdcraft-linux/install.sh not found."
+    echo "ℹ️  VSDCraft Linux not detected in PATH."
+    echo "    Download the official package from:"
+    echo "    https://github.com/henry1056/vsdcraft-linux/releases/tag/v1.0.0"
+    echo "    and install via: sudo apt install ./vsdcraft_1.0.0_all.deb"
 fi
 
 # ---------------------------------------------------------
@@ -69,15 +76,13 @@ fi
 # ---------------------------------------------------------
 echo ""
 echo "=========================================================="
-echo "🎉 Linux Installation Completed!"
+echo "🎉 Linux Integration Setup Complete!"
 echo "=========================================================="
 echo "Next Steps:"
 echo " 1. Make sure Spotify desktop is running (with Spicetify applied)."
 echo " 2. Launch VSDCraft controller:"
-echo "    cd ${VSDCRAFT_DIR} && .venv/bin/python3 -m vsdcraft"
-echo "    (Or find 'VSDCraft Linux' in your desktop application menu)"
+echo "    vsdcraft"
+echo "    (Or find 'VSDCraft Linux' in your application launcher)"
 echo ""
-echo " 3. To run in background as a user service on system boot:"
-echo "    systemctl --user daemon-reload"
-echo "    systemctl --user enable --now vsdcraft.service"
+echo " 3. In VSDCraft, map Spotify / Spicetify actions to your keys/knobs."
 echo "=========================================================="

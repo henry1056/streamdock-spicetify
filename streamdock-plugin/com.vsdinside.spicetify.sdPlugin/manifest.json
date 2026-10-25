@@ -164,6 +164,7 @@
     }
   ],
   "SDKVersion": 1,
+  "UUID": "com.vsdinside.spicetify",
   "Author": "Spicetify",
   "Name": "Spotify (Spicetify)",
   "Icon": "icons/pluginIcon",
