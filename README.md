@@ -1,8 +1,16 @@
 # Spicetify Stream Dock N3 Controller
 
-Control Spotify directly from your **VSDinside Stream Dock N3** macro pad using **Spicetify**.
+[![Latest Release](https://img.shields.io/github/v/release/henry1056/streamdock-spicetify?color=38bdf8&label=Release)](https://github.com/henry1056/streamdock-spicetify/releases/latest)
+[![Windows](https://img.shields.io/badge/Platform-Windows-blue?logo=windows)](https://github.com/henry1056/streamdock-spicetify/releases/download/v1.0.0/StreamDock-Spicetify-Setup.exe)
+[![Linux](https://img.shields.io/badge/Platform-Linux-orange?logo=linux)](https://github.com/henry1056/streamdock-spicetify/releases/download/v1.0.0/streamdock-spicetify_1.0.0_all.deb)
 
-This integration bypasses the Spotify Web API restrictions (no Spotify Premium required, no developer client ID/secret, no sleep disconnects) by interfacing directly with your local Spotify desktop client.
+Control Spotify directly from your **VSDinside Stream Dock N3** macro pad using **Spicetify** on Windows & Linux.
+
+### 📥 One-Click Installers
+- **Windows**: Download [**`StreamDock-Spicetify-Setup.exe`**](https://github.com/henry1056/streamdock-spicetify/releases/download/v1.0.0/StreamDock-Spicetify-Setup.exe) (Single-file GUI setup wizard; zero external runtimes needed).
+- **Linux (Debian / Ubuntu / Mint / Pop!_OS)**: Download [**`streamdock-spicetify_1.0.0_all.deb`**](https://github.com/henry1056/streamdock-spicetify/releases/download/v1.0.0/streamdock-spicetify_1.0.0_all.deb) and install via `sudo dpkg -i streamdock-spicetify_1.0.0_all.deb`.
+
+This integration bypasses Spotify Web API restrictions (no Spotify Premium required, no developer client ID/secret, no sleep disconnects) by interfacing directly with your local Spotify desktop client.
 
 ---
 
