@@ -41,3 +41,9 @@ yarn-error.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# .NET Build Output
+bin/
+obj/
+*.exe
+installer/payload.zip
