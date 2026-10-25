@@ -1,0 +1,29 @@
+{
+  "Name": "Spotify (Spicetify)",
+  "Description": "Control Spotify locally via Spicetify for VSDinside Stream Dock N3",
+  "Category": "Spotify (Spicetify)",
+  "com.vsdinside.spicetify.playpause": {
+    "Name": "Play / Pause",
+    "Tooltip": "Play / Pause Spotify playback"
+  },
+  "com.vsdinside.spicetify.next": {
+    "Name": "Next Track",
+    "Tooltip": "Skip to next Spotify track"
+  },
+  "com.vsdinside.spicetify.previous": {
+    "Name": "Previous Track",
+    "Tooltip": "Return to previous Spotify track"
+  },
+  "com.vsdinside.spicetify.volume": {
+    "Name": "Volume Control (Knob)",
+    "Tooltip": "Rotate knob to adjust volume, press to Play/Pause"
+  },
+  "com.vsdinside.spicetify.like": {
+    "Name": "Like Track",
+    "Tooltip": "Save/Like current track in Spotify"
+  },
+  "com.vsdinside.spicetify.nowplaying": {
+    "Name": "Now Playing Info",
+    "Tooltip": "Displays current track title and artist"
+  }
+}

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Spotify Playlist Selector</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            color: #d8d8d8;
+            background-color: #202020;
+            margin: 0;
+            padding: 12px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        .header svg {
+            fill: #1db954;
+            width: 20px;
+            height: 20px;
+        }
+        .header h3 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .section {
+            margin-bottom: 14px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        select, input[type="text"] {
+            width: 100%;
+            padding: 8px 10px;
+            background-color: #2b2b2b;
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        select:focus, input[type="text"]:focus {
+            border-color: #1db954;
+        }
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            padding: 7px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            transition: background-color 0.2s, opacity 0.2s;
+        }
+        .btn-primary {
+            background-color: #1db954;
+            color: #000;
+            flex: 1;
+        }
+        .btn-primary:hover {
+            background-color: #1ed760;
+        }
+        .btn-secondary {
+            background-color: #383838;
+            color: #eee;
+        }
+        .btn-secondary:hover {
+            background-color: #484848;
+        }
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #bbb;
+        }
+        .checkbox-row input[type="checkbox"] {
+            cursor: pointer;
+            accent-color: #1db954;
+            width: 15px;
+            height: 15px;
+        }
+        .status-box {
+            margin-top: 12px;
+            padding: 8px 10px;
+            border-radius: 4px;
+            background-color: #282828;
+            border-left: 3px solid #1db954;
+            font-size: 11px;
+            color: #aaa;
+            line-height: 1.4;
+        }
+        .status-box span {
+            color: #fff;
+            font-weight: 600;
+        }
+        .hint {
+            font-size: 11px;
+            color: #777;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <svg viewBox="0 0 24 24">
+            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.503 17.306c-.216.353-.676.467-1.029.251-2.822-1.724-6.375-2.115-10.559-1.16-.403.092-.807-.16-.899-.562-.092-.403.16-.807.562-.899 4.582-1.047 8.52-.607 11.666 1.341.353.216.467.676.251 1.029zm1.468-3.264c-.272.441-.853.582-1.294.31-3.23-1.986-8.155-2.56-11.977-1.4-1.4.498-.052.793-.493.52-.441-.272-.582-.853-.31-1.294 4.37-2.684 9.808-2.029 13.51.25.441.272.582.853.31 1.294zm.126-3.41c-3.873-2.3-10.264-2.512-13.978-1.385-.595.18-1.223-.159-1.403-.754-.18-.595.159-1.223.754-1.403 4.269-1.296 11.328-1.05 15.795 1.599.535.317.71 1.008.393 1.543-.317.535-1.008.71-1.543.393z"/>
+        </svg>
+        <h3>Play Spotify Playlist</h3>
+    </div>
+
+    <div class="section">
+        <label for="playlistSelect">Your Spotify Playlists</label>
+        <select id="playlistSelect">
+            <option value="">Loading playlists from Spotify...</option>
+        </select>
+        <div class="btn-row">
+            <button type="button" class="btn-secondary" id="refreshBtn">⟳ Refresh Playlists</button>
+            <button type="button" class="btn-primary" id="testBtn">▶ Test Play</button>
+        </div>
+    </div>
+
+    <div class="section">
+        <label for="playlistUri">Playlist Link or URI</label>
+        <input type="text" id="playlistUri" placeholder="Paste link or spotify:playlist:..."/>
+        <div class="hint">You can also right-click any Spotify playlist &gt; Share &gt; Copy link to playlist, and paste it here!</div>
+    </div>
+
+    <label class="checkbox-row">
+        <input type="checkbox" id="autoTitleCheck" checked />
+        <span>Update key title with playlist name</span>
+    </label>
+
+    <div class="status-box" id="currentConfig">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img id="playlistThumb" src="" style="width: 44px; height: 44px; border-radius: 4px; display: none; object-fit: cover; border: 1px solid #444;" />
+            <div style="flex: 1; min-width: 0;">
+                Configured: <span id="configuredName">None</span><br/>
+                <div style="font-size: 10px; margin-top: 3px; word-break: break-all; color: #888;" id="configuredUri">No playlist selected</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let websocket = null;
+        let pluginUUID = null;
+        let currentPlaylists = [];
+        let settings = {
+            uri: '',
+            name: '',
+            image: '',
+            autoTitle: true
+        };
+
+        const playlistSelect = document.getElementById('playlistSelect');
+        const playlistUri = document.getElementById('playlistUri');
+        const autoTitleCheck = document.getElementById('autoTitleCheck');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const testBtn = document.getElementById('testBtn');
+        const configuredName = document.getElementById('configuredName');
+        const configuredUri = document.getElementById('configuredUri');
+        const playlistThumb = document.getElementById('playlistThumb');
+
+        function updateDisplay() {
+            configuredName.textContent = settings.name || (settings.uri ? 'Custom Playlist' : 'None');
+            configuredUri.textContent = settings.uri || 'No playlist selected';
+            playlistUri.value = settings.uri || '';
+            autoTitleCheck.checked = settings.autoTitle !== false;
+
+            // Thumbnail display
+            const found = currentPlaylists.find(p => p.uri === settings.uri);
+            const imgSrc = (found && found.image) || settings.image;
+            if (imgSrc) {
+                let displaySrc = imgSrc;
+                if (displaySrc.startsWith('spotify:mosaic:')) {
+                    displaySrc = 'https://mosaic.scdn.co/300/' + displaySrc.replace('spotify:mosaic:', '').replace(/:/g, '');
+                } else if (displaySrc.startsWith('spotify:image:')) {
+                    displaySrc = 'https://i.scdn.co/image/' + displaySrc.replace('spotify:image:', '');
+                }
+                playlistThumb.src = displaySrc;
+                playlistThumb.style.display = 'block';
+            } else {
+                playlistThumb.style.display = 'none';
+            }
+
+            if (settings.uri) {
+                let foundOpt = false;
+                for (let i = 0; i < playlistSelect.options.length; i++) {
+                    if (playlistSelect.options[i].value === settings.uri) {
+                        playlistSelect.selectedIndex = i;
+                        foundOpt = true;
+                        break;
+                    }
+                }
+                if (!foundOpt && playlistSelect.options.length > 0) {
+                    playlistSelect.selectedIndex = 0;
+                }
+            }
+        }
+
+        function saveSettings() {
+            if (websocket && websocket.readyState === WebSocket.OPEN) {
+                websocket.send(JSON.stringify({
+                    event: 'setSettings',
+                    context: pluginUUID,
+                    payload: settings
+                }));
+            }
+            updateDisplay();
+        }
+
+        function setKeyTitle(title) {
+            if (!websocket || websocket.readyState !== WebSocket.OPEN) return;
+            websocket.send(JSON.stringify({
+                event: 'setTitle',
+                context: pluginUUID,
+                payload: {
+                    title: title || '',
+                    target: 0
+                }
+            }));
+        }
+
+        playlistSelect.addEventListener('change', () => {
+            const selectedOpt = playlistSelect.options[playlistSelect.selectedIndex];
+            if (selectedOpt && selectedOpt.value) {
+                settings.uri = selectedOpt.value;
+                settings.name = selectedOpt.textContent.replace(/^♫\s*/, '');
+                settings.autoTitle = autoTitleCheck.checked;
+                const found = currentPlaylists.find(p => p.uri === settings.uri);
+                if (found && found.image) {
+                    settings.image = found.image;
+                }
+                saveSettings();
+                if (settings.autoTitle && settings.name) {
+                    setKeyTitle(settings.name);
+                }
+            }
+        });
+
+        playlistUri.addEventListener('input', () => {
+            let val = playlistUri.value.trim();
+            // Convert open.spotify.com/playlist/xxx to spotify:playlist:xxx
+            if (val.includes('open.spotify.com/playlist/')) {
+                const match = val.match(/playlist\/([a-zA-Z0-9]+)/);
+                if (match) val = 'spotify:playlist:' + match[1];
+            }
+            settings.uri = val;
+            const found = currentPlaylists.find(p => p.uri === val);
+            if (found) {
+                settings.name = found.name;
+                settings.image = found.image;
+                if (settings.autoTitle && settings.name) {
+                    setKeyTitle(settings.name);
+                }
+            }
+            saveSettings();
+        });
+
+        autoTitleCheck.addEventListener('change', () => {
+            settings.autoTitle = autoTitleCheck.checked;
+            saveSettings();
+        });
+
+        refreshBtn.addEventListener('click', async () => {
+            refreshBtn.textContent = 'Refreshing...';
+            try {
+                await fetch('http://127.0.0.1:8974/refresh_playlists');
+            } catch (e) {}
+            setTimeout(loadPlaylists, 600);
+        });
+
+        testBtn.addEventListener('click', async () => {
+            if (!settings.uri) {
+                alert('Please select or paste a playlist link first!');
+                return;
+            }
+            testBtn.textContent = 'Starting...';
+            try {
+                await fetch('http://127.0.0.1:8974/playplaylist?uri=' + encodeURIComponent(settings.uri));
+                setTimeout(() => { testBtn.textContent = '▶ Playing!'; }, 400);
+                setTimeout(() => { testBtn.textContent = '▶ Test Play'; }, 2000);
+            } catch (e) {
+                testBtn.textContent = '▶ Test Play';
+            }
+        });
+
+        async function loadPlaylists() {
+            try {
+                const res = await fetch('http://127.0.0.1:8974/playlists');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && Array.isArray(data.playlists) && data.playlists.length > 0) {
+                        populatePlaylists(data.playlists);
+                        refreshBtn.textContent = '⟳ Refresh Playlists';
+                        return;
+                    }
+                }
+            } catch (e) {}
+            
+            // Fallback: Retry in 1s if list is still empty
+            setTimeout(async () => {
+                try {
+                    const res = await fetch('http://127.0.0.1:8974/playlists');
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && Array.isArray(data.playlists) && data.playlists.length > 0) {
+                            populatePlaylists(data.playlists);
+                        }
+                    }
+                } catch (e) {}
+                refreshBtn.textContent = '⟳ Refresh Playlists';
+            }, 1200);
+        }
+
+        function populatePlaylists(playlists) {
+            currentPlaylists = playlists;
+            playlistSelect.innerHTML = '<option value="">-- Choose a playlist --</option>';
+            playlists.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.uri;
+                opt.textContent = '♫ ' + p.name;
+                playlistSelect.appendChild(opt);
+            });
+            updateDisplay();
+        }
+
+        // Stream Dock / Elgato Property Inspector Entry Point
+        window.connectElgatoStreamDeckSocket = function(port, uuid, registerEvent, appInfo, actionInfo) {
+            pluginUUID = uuid;
+            if (typeof actionInfo === 'string') {
+                try { actionInfo = JSON.parse(actionInfo); } catch (e) {}
+            }
+            if (actionInfo && actionInfo.payload && actionInfo.payload.settings) {
+                settings = Object.assign(settings, actionInfo.payload.settings);
+            }
+
+            websocket = new WebSocket('ws://127.0.0.1:' + port);
+            websocket.onopen = function () {
+                websocket.send(JSON.stringify({
+                    event: registerEvent,
+                    uuid: uuid
+                }));
+                websocket.send(JSON.stringify({
+                    event: 'getSettings',
+                    context: uuid
+                }));
+            };
+
+            websocket.onmessage = function (evt) {
+                try {
+                    const data = JSON.parse(evt.data);
+                    if (data.event === 'didReceiveSettings' && data.payload && data.payload.settings) {
+                        settings = Object.assign(settings, data.payload.settings);
+                        updateDisplay();
+                    } else if (data.event === 'sendToPropertyInspector' && data.payload && data.payload.playlists) {
+                        populatePlaylists(data.payload.playlists);
+                    }
+                } catch (e) {}
+            };
+
+            updateDisplay();
+            loadPlaylists();
+        };
+
+        // Standalone browser / preview fallback
+        loadPlaylists();
+        updateDisplay();
+    </script>
+</body>
+</html>

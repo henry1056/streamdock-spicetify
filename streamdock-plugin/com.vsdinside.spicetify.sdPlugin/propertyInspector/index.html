@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Spicetify Spotify Controller</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            color: #d8d8d8;
+            background-color: #2d2d2d;
+            margin: 0;
+            padding: 12px;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #3c3c3c;
+        }
+        .title {
+            font-weight: 600;
+            color: #1db954;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #1db954;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            color: #aaa;
+        }
+        .badge {
+            background-color: #1db95422;
+            color: #1db954;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .tip {
+            font-size: 11px;
+            color: #888;
+            line-height: 1.4;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="title">
+            <span class="status-dot"></span>
+            Spicetify Spotify Controller
+        </div>
+        <div class="info-row">
+            <span>Mode:</span>
+            <span class="badge">Direct Local Control</span>
+        </div>
+        <div class="info-row">
+            <span>Premium Required:</span>
+            <span style="color:#1db954">No (Free & Premium)</span>
+        </div>
+        <div class="info-row">
+            <span>Local Bridge:</span>
+            <span>http://127.0.0.1:8974</span>
+        </div>
+    </div>
+    <div class="tip">
+        <strong>Tip for N3 Rotary Knobs:</strong>
+        Map the <em>Volume Control (Knob)</em> action to any of your 3 rotary knobs. Rotate to adjust volume, and press the knob down to toggle Play / Pause!
+    </div>
+</body>
+</html>

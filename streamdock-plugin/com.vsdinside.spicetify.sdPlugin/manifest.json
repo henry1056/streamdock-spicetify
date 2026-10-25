@@ -1,0 +1,198 @@
+{
+  "Actions": [
+    {
+      "UUID": "com.vsdinside.spicetify.playpause",
+      "Name": "Play / Pause",
+      "Tooltip": "Play / Pause Spotify playback",
+      "Icon": "icons/playpause",
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "DisableAutomaticStates": true,
+      "KeyboardSupport": true,
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": true,
+      "PropertyInspectorPath": "propertyInspector/index.html",
+      "States": [
+        {
+          "Image": "icons/play",
+          "Title": "Play",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        },
+        {
+          "Image": "icons/pause",
+          "Title": "Pause",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        }
+      ]
+    },
+    {
+      "UUID": "com.vsdinside.spicetify.next",
+      "Name": "Next Track",
+      "Tooltip": "Skip to next Spotify track",
+      "Icon": "icons/next",
+      "Controllers": [
+        "Keypad"
+      ],
+      "DisableAutomaticStates": true,
+      "KeyboardSupport": true,
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": true,
+      "PropertyInspectorPath": "propertyInspector/index.html",
+      "States": [
+        {
+          "Image": "icons/next",
+          "Title": "Next",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        }
+      ]
+    },
+    {
+      "UUID": "com.vsdinside.spicetify.previous",
+      "Name": "Previous Track",
+      "Tooltip": "Return to previous Spotify track",
+      "Icon": "icons/prev",
+      "Controllers": [
+        "Keypad"
+      ],
+      "DisableAutomaticStates": true,
+      "KeyboardSupport": true,
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": true,
+      "PropertyInspectorPath": "propertyInspector/index.html",
+      "States": [
+        {
+          "Image": "icons/prev",
+          "Title": "Prev",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        }
+      ]
+    },
+    {
+      "UUID": "com.vsdinside.spicetify.volume",
+      "Name": "Volume Control (Knob)",
+      "Tooltip": "Rotate knob to adjust volume, press to Play/Pause",
+      "Icon": "icons/volume",
+      "Controllers": [
+        "Knob"
+      ],
+      "DisableAutomaticStates": true,
+      "KeyboardSupport": true,
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": true,
+      "PropertyInspectorPath": "propertyInspector/index.html",
+      "States": [
+        {
+          "Image": "icons/volume",
+          "Title": "Volume",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        }
+      ]
+    },
+    {
+      "UUID": "com.vsdinside.spicetify.like",
+      "Name": "Like Track",
+      "Tooltip": "Save/Like current track in Spotify",
+      "Icon": "icons/like",
+      "Controllers": [
+        "Keypad"
+      ],
+      "DisableAutomaticStates": true,
+      "KeyboardSupport": true,
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": true,
+      "PropertyInspectorPath": "propertyInspector/index.html",
+      "States": [
+        {
+          "Image": "icons/like",
+          "Title": "Like",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        }
+      ]
+    },
+    {
+      "UUID": "com.vsdinside.spicetify.nowplaying",
+      "Name": "Now Playing Info",
+      "Tooltip": "Displays current track title and artist",
+      "Icon": "icons/info",
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "DisableAutomaticStates": true,
+      "KeyboardSupport": true,
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": true,
+      "PropertyInspectorPath": "propertyInspector/index.html",
+      "States": [
+        {
+          "Image": "icons/info",
+          "Title": "Now Playing",
+          "TitleAlignment": "bottom",
+          "FontSize": "9"
+        }
+      ]
+    },
+    {
+      "UUID": "com.vsdinside.spicetify.playplaylist",
+      "Name": "Play Playlist",
+      "Tooltip": "Play a Spotify playlist by link, URI, or selection",
+      "Icon": "icons/play",
+      "Controllers": [
+        "Keypad"
+      ],
+      "DisableAutomaticStates": true,
+      "KeyboardSupport": true,
+      "UserTitleEnabled": true,
+      "SupportedInMultiActions": true,
+      "PropertyInspectorPath": "propertyInspector/playlist.html",
+      "States": [
+        {
+          "Image": "icons/play",
+          "Title": "Playlist",
+          "TitleAlignment": "bottom",
+          "FontSize": "10"
+        }
+      ]
+    }
+  ],
+  "SDKVersion": 1,
+  "Author": "Spicetify",
+  "Name": "Spotify (Spicetify)",
+  "Icon": "icons/pluginIcon",
+  "Category": "Spotify (Spicetify)",
+  "CategoryIcon": "icons/category",
+  "CodePathWin": "plugin/index.js",
+  "CodePathMac": "plugin/index.js",
+  "CodePathLinux": "plugin/index.js",
+  "CodePath": "plugin/index.js",
+  "Description": "Control Spotify locally via Spicetify for VSDinside Stream Dock N3",
+  "Version": "1.0.0",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    },
+    {
+      "Platform": "linux",
+      "MinimumVersion": "0"
+    },
+    {
+      "Platform": "mac",
+      "MinimumVersion": "10.14"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "3.10.188.226"
+  },
+  "Nodejs": {
+    "Version": "20"
+  }
+}
